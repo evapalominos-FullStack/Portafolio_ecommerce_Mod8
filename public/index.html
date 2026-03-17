@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-Commerce — Portafolio Módulo 8</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body { background: #f8f9fa; }
+    .navbar-brand { font-weight: 700; font-size: 1.3rem; }
+    .card-product { transition: transform .2s, box-shadow .2s; }
+    .card-product:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+    .view { display: none; }
+    .view.active { display: block; }
+    .badge-cart { position: absolute; top: -6px; right: -6px; }
+    #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; }
+  </style>
+</head>
+<body>
+
+<!-- ── Navbar ─────────────────────────────────────────────────────────────── -->
+<nav class="navbar navbar-dark bg-dark px-4">
+  <span class="navbar-brand">🛒 E-Commerce</span>
+  <div class="d-flex align-items-center gap-3" id="nav-auth">
+    <!-- se rellena con JS -->
+  </div>
+</nav>
+
+<!-- ── Contenido ──────────────────────────────────────────────────────────── -->
+<div class="container py-4">
+
+  <!-- LOGIN / REGISTER -->
+  <div class="view active" id="view-auth">
+    <div class="row justify-content-center">
+      <div class="col-md-5">
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs mb-3" id="authTabs">
+          <li class="nav-item">
+            <button class="nav-link active" onclick="switchTab('login')">Iniciar sesión</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" onclick="switchTab('register')">Registrarse</button>
+          </li>
+        </ul>
+
+        <!-- Login -->
+        <div id="tab-login">
+          <div class="card shadow-sm">
+            <div class="card-body p-4">
+              <h5 class="card-title mb-3">Iniciar sesión</h5>
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="login-email" placeholder="correo@ejemplo.com" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="login-password" placeholder="••••••••" />
+              </div>
+              <button class="btn btn-primary w-100" onclick="login()">Entrar</button>
+              <div id="login-msg" class="mt-3"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Register -->
+        <div id="tab-register" style="display:none">
+          <div class="card shadow-sm">
+            <div class="card-body p-4">
+              <h5 class="card-title mb-3">Crear cuenta</h5>
+              <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" id="reg-username" placeholder="tunombre" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="reg-email" placeholder="correo@ejemplo.com" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="reg-password" placeholder="••••••••" />
+              </div>
+              <button class="btn btn-success w-100" onclick="register()">Registrarse</button>
+              <div id="reg-msg" class="mt-3"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTOS -->
+  <div class="view" id="view-products">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>🛍️ Productos</h2>
+      <button class="btn btn-outline-secondary btn-sm" onclick="showView('cart')">
+        🛒 Ver carrito <span class="badge bg-danger" id="cart-badge">0</span>
+      </button>
+    </div>
+    <div class="row g-3" id="products-grid"></div>
+  </div>
+
+  <!-- CARRITO -->
+  <div class="view" id="view-cart">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>🛒 Mi Carrito</h2>
+      <button class="btn btn-outline-secondary btn-sm" onclick="showView('products')">
+        ← Seguir comprando
+      </button>
+    </div>
+    <div id="cart-content"></div>
+  </div>
+
+  <!-- UPLOAD -->
+  <div class="view" id="view-upload">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <h2 class="mb-4">📷 Subir Imagen</h2>
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <div class="mb-3">
+              <label class="form-label">Selecciona una imagen (jpg, png, gif — máx 5MB)</label>
+              <input type="file" class="form-control" id="upload-file" accept="image/*" />
+            </div>
+            <button class="btn btn-primary w-100" onclick="subirImagen()">Subir imagen</button>
+            <div id="upload-msg" class="mt-3"></div>
+            <div id="upload-preview" class="mt-3" style="display:none">
+              <p class="text-success fw-bold">✅ Imagen subida:</p>
+              <img id="uploaded-img" src="" class="img-fluid rounded shadow" style="max-height:250px" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div id="toast-container"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// Helpers
+// ══════════════════════════════════════════════════════════════════════════════
+const getToken = () => localStorage.getItem('token');
+const getUser  = () => JSON.parse(localStorage.getItem('user') || 'null');
+
+function toast(msg, tipo = 'success') {
+  const t = document.createElement('div');
+  t.className = `alert alert-${tipo} shadow`;
+  t.style.cssText = 'min-width:260px;animation:fadeIn .3s';
+  t.textContent = msg;
+  document.getElementById('toast-container').appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+function showMsg(id, msg, tipo = 'danger') {
+  const el = document.getElementById(id);
+  el.innerHTML = `<div class="alert alert-${tipo} py-2">${msg}</div>`;
+}
+
+async function api(method, url, body = null) {
+  const opts = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {})
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res  = await fetch(url, opts);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.mensaje || 'Error');
+  return data;
+}
+
+// ── Vistas ────────────────────────────────────────────────────────────────
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(`view-${name}`).classList.add('active');
+  if (name === 'products') loadProducts();
+  if (name === 'cart')     loadCart();
+}
+
+// ── Tabs auth ─────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('tab-login').style.display    = tab === 'login'    ? 'block' : 'none';
+  document.getElementById('tab-register').style.display = tab === 'register' ? 'block' : 'none';
+  document.querySelectorAll('#authTabs .nav-link').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+  });
+}
+
+// ── Navbar dinámica ───────────────────────────────────────────────────────
+function renderNav() {
+  const user = getUser();
+  const nav  = document.getElementById('nav-auth');
+  if (user) {
+    nav.innerHTML = `
+      <span class="text-white">Hola, <b>${user.username}</b></span>
+      <button class="btn btn-outline-light btn-sm" onclick="showView('products')">🛍️ Productos</button>
+      <button class="btn btn-outline-light btn-sm" onclick="showView('cart')">🛒 Carrito</button>
+      <button class="btn btn-outline-light btn-sm" onclick="showView('upload')">📷 Upload</button>
+      <button class="btn btn-danger btn-sm" onclick="logout()">Salir</button>
+    `;
+  } else {
+    nav.innerHTML = '';
+  }
+}
+
+// ── AUTH ──────────────────────────────────────────────────────────────────
+async function login() {
+  try {
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const data = await api('POST', '/api/auth/login', { email, password });
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('user', JSON.stringify(data.user));
+    renderNav();
+    showView('products');
+    toast(`¡Bienvenido ${data.user.username}! 👋`);
+  } catch (e) {
+    showMsg('login-msg', e.message);
+  }
+}
+
+async function register() {
+  try {
+    const username = document.getElementById('reg-username').value.trim();
+    const email    = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value;
+    await api('POST', '/api/auth/register', { username, email, password });
+    showMsg('reg-msg', '✅ Cuenta creada. Ahora inicia sesión.', 'success');
+    setTimeout(() => switchTab('login'), 1500);
+  } catch (e) {
+    showMsg('reg-msg', e.message);
+  }
+}
+
+function logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  renderNav();
+  showView('auth');
+  toast('Sesión cerrada', 'secondary');
+}
+
+// ── PRODUCTOS ─────────────────────────────────────────────────────────────
+async function loadProducts() {
+  try {
+    const data  = await api('GET', '/api/products');
+    const grid  = document.getElementById('products-grid');
+    grid.innerHTML = data.data.map(p => `
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="card card-product h-100 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <h6 class="card-title">${p.name}</h6>
+            <p class="card-text text-muted small flex-grow-1">${p.description || ''}</p>
+            <p class="fw-bold text-primary fs-5">$${parseFloat(p.price).toFixed(2)}</p>
+            <button class="btn btn-primary btn-sm" onclick="agregarAlCarrito(${p.id})">
+              🛒 Agregar al carrito
+            </button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    toast('Error al cargar productos: ' + e.message, 'danger');
+  }
+}
+
+async function agregarAlCarrito(productId) {
+  try {
+    await api('POST', '/api/cart', { productId, quantity: 1 });
+    toast('✅ Producto agregado al carrito');
+    actualizarBadge();
+  } catch (e) {
+    toast('Error: ' + e.message, 'danger');
+  }
+}
+
+async function actualizarBadge() {
+  try {
+    const data = await api('GET', '/api/cart');
+    document.getElementById('cart-badge').textContent = data.data.length;
+  } catch {}
+}
+
+// ── CARRITO ───────────────────────────────────────────────────────────────
+async function loadCart() {
+  const content = document.getElementById('cart-content');
+  try {
+    const data = await api('GET', '/api/cart');
+    if (!data.data.length) {
+      content.innerHTML = `
+        <div class="text-center py-5 text-muted">
+          <p style="font-size:3rem">🛒</p>
+          <p>Tu carrito está vacío</p>
+          <button class="btn btn-primary" onclick="showView('products')">Ver productos</button>
+        </div>`;
+      return;
+    }
+    content.innerHTML = `
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <table class="table align-middle">
+            <thead class="table-light">
+              <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th><th></th></tr>
+            </thead>
+            <tbody>
+              ${data.data.map(item => `
+                <tr>
+                  <td><b>${item.product.name}</b></td>
+                  <td>$${parseFloat(item.product.price).toFixed(2)}</td>
+                  <td>${item.quantity}</td>
+                  <td>$${(parseFloat(item.product.price) * item.quantity).toFixed(2)}</td>
+                  <td>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarDelCarrito(${item.product_id})">
+                      🗑
+                    </button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div class="text-end">
+            <h5>Total: <span class="text-primary">$${data.total.toFixed(2)}</span></h5>
+          </div>
+        </div>
+      </div>`;
+  } catch (e) {
+    content.innerHTML = `<div class="alert alert-danger">${e.message}</div>`;
+  }
+}
+
+async function eliminarDelCarrito(productId) {
+  try {
+    await api('DELETE', `/api/cart/${productId}`);
+    toast('Producto eliminado del carrito', 'warning');
+    loadCart();
+    actualizarBadge();
+  } catch (e) {
+    toast('Error: ' + e.message, 'danger');
+  }
+}
+
+// ── UPLOAD ────────────────────────────────────────────────────────────────
+async function subirImagen() {
+  const fileInput = document.getElementById('upload-file');
+  const file = fileInput.files[0];
+  if (!file) { toast('Selecciona un archivo', 'warning'); return; }
+
+  const formData = new FormData();
+  formData.append('imagen', file);
+
+  try {
+    const res  = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${getToken()}` },
+      body: formData
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.mensaje);
+
+    document.getElementById('upload-msg').innerHTML =
+      `<div class="alert alert-success">${data.mensaje}</div>`;
+    document.getElementById('upload-preview').style.display = 'block';
+    document.getElementById('uploaded-img').src = data.ruta;
+    toast('✅ Imagen subida correctamente');
+  } catch (e) {
+    document.getElementById('upload-msg').innerHTML =
+      `<div class="alert alert-danger">${e.message}</div>`;
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+renderNav();
+if (getToken()) {
+  showView('products');
+  actualizarBadge();
+}
+</script>
+
+</body>
+</html>

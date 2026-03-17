@@ -4,12 +4,11 @@ API REST con Node.js + Express + PostgreSQL + JWT + bcrypt + Bootstrap.
 
 ## Instalación
 
-```bash
 npm install
 cp .env.example .env
-# Editar .env con tus credenciales de PostgreSQL
+# credenciales de PostgreSQL
 npm run dev
-```
+
 
 App en **http://localhost:3000**
 

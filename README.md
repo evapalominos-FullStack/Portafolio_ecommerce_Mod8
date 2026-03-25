@@ -1,6 +1,15 @@
-# 🛒 E-Commerce — Portafolio Módulo 8
+# 🛒 E-Commerce — Portafolio Módulo 9
 
-API REST con Node.js + Express + PostgreSQL + JWT + bcrypt + Bootstrap.
+## 🌐 Demo en vivo
+https://portafolio-ecommerce-mod8.onrender.com/
+
+API REST desarrollada con Node.js + Express + PostgreSQL, incluye autenticación con JWT + bcrypt + Bootstrap. También incluye Carrito de compras y Upload de imagen.
+![NodeJS](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+![Sequelize](https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=sequelize&logoColor=white)
+
 
 ## 🛠 Tecnologías utilizadas
 

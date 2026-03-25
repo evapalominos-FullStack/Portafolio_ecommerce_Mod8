@@ -2,6 +2,16 @@
 
 API REST con Node.js + Express + PostgreSQL + JWT + bcrypt + Bootstrap.
 
+## 🛠 Tecnologías utilizadas
+
+- **Node.js** — entorno de ejecución del servidor
+- **Express** — framework para las rutas y middlewares
+- **PostgreSQL** — base de datos relacional
+- **Sequelize** — ORM para conectar Node.js con PostgreSQL
+- **JWT** — autenticación mediante tokens
+- **bcrypt** — encriptación de contraseñas
+- **Render** — plataforma de despliegue en la nube
+
 ## Instalación
 
 npm install

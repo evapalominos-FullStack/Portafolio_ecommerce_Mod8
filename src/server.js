@@ -1,17 +1,17 @@
 // src/server.js
 require('dotenv').config();
-const express     = require('express');
-const cors        = require('cors');
-const path        = require('path');
-const fileUpload  = require('express-fileupload');
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const fileUpload = require('express-fileupload');
 const { sequelize, Product } = require('./models');
 
-const authRouter     = require('./routes/auth');
+const authRouter = require('./routes/auth');
 const productsRouter = require('./routes/products');
-const cartRouter     = require('./routes/cart');
-const uploadRouter   = require('./routes/upload');
+const cartRouter = require('./routes/cart');
+const uploadRouter = require('./routes/upload');
 
-const app  = express();
+const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ── Middlewares ────────────────────────────────────────────────────────────
@@ -24,10 +24,10 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // ── Rutas API ──────────────────────────────────────────────────────────────
-app.use('/api/auth',     authRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/products', productsRouter);
-app.use('/api/cart',     cartRouter);
-app.use('/api/upload',   uploadRouter);
+app.use('/api/cart', cartRouter);
+app.use('/api/upload', uploadRouter);
 
 // ── Ruta raíz ─────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {
@@ -41,14 +41,14 @@ app.use((req, res) => {
 
 // ── Seed de productos de ejemplo ───────────────────────────────────────────
 const PRODUCTOS = [
-  { name: 'MacBook Air M3',    description: 'Laptop ultradelgada con chip M3',  price: 1299.99 },
-  { name: 'iPhone 16 Pro',     description: 'Smartphone flagship de Apple',      price: 999.99  },
-  { name: 'AirPods Pro 3',     description: 'Auriculares inalámbricos premium',  price: 249.99  },
-  { name: 'iPad Air M2',       description: 'Tablet potente y versátil',         price: 599.99  },
-  { name: 'Apple Watch Ultra', description: 'Smartwatch de alta gama',           price: 799.99  },
-  { name: 'Mac mini M4',       description: 'Computador compacto y potente',     price: 599.99  },
-  { name: 'Apple TV 4K',       description: 'Streaming en resolución 4K HDR',   price: 129.99  },
-  { name: 'HomePod mini',      description: 'Altavoz inteligente con Siri',      price: 99.99   },
+  { name: 'MacBook Air M3', description: 'Laptop ultradelgada con chip M3', price: 1299.99 },
+  { name: 'iPhone 16 Pro', description: 'Smartphone flagship de Apple', price: 999.99 },
+  { name: 'AirPods Pro 3', description: 'Auriculares inalámbricos premium', price: 249.99 },
+  { name: 'iPad Air M2', description: 'Tablet potente y versátil', price: 599.99 },
+  { name: 'Apple Watch Ultra', description: 'Smartwatch de alta gama', price: 799.99 },
+  { name: 'Mac mini M4', description: 'Computador compacto y potente', price: 599.99 },
+  { name: 'Apple TV 4K', description: 'Streaming en resolución 4K HDR', price: 129.99 },
+  { name: 'HomePod mini', description: 'Altavoz inteligente con Siri', price: 99.99 },
 ];
 
 // ── Inicialización ─────────────────────────────────────────────────────────
@@ -58,8 +58,9 @@ async function bootstrap() {
     console.log('[Sequelize] Tablas sincronizadas ✓');
 
     // Seed solo si no hay productos
-    await Product.destroy({ where: {} });
-    await Product.bulkCreate(PRODUCTOS);
+    const count = await Product.count();
+    if (count === 0) {
+      await Product.bulkCreate(PRODUCTOS);
       console.log('[Seed] Productos insertados ✓');
     }
 

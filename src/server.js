@@ -47,6 +47,8 @@ const PRODUCTOS = [
   { name: 'iPad Air M2',       description: 'Tablet potente y versátil',         price: 599.99  },
   { name: 'Apple Watch Ultra', description: 'Smartwatch de alta gama',           price: 799.99  },
   { name: 'Mac mini M4',       description: 'Computador compacto y potente',     price: 599.99  },
+  { name: 'Apple TV 4K',       description: 'Streaming en resolución 4K HDR',   price: 129.99  },
+  { name: 'HomePod mini',      description: 'Altavoz inteligente con Siri',      price: 99.99   },
 ];
 
 // ── Inicialización ─────────────────────────────────────────────────────────
@@ -56,9 +58,8 @@ async function bootstrap() {
     console.log('[Sequelize] Tablas sincronizadas ✓');
 
     // Seed solo si no hay productos
-    const count = await Product.count();
-    if (count === 0) {
-      await Product.bulkCreate(PRODUCTOS);
+    await Product.destroy({ where: {} });
+    await Product.bulkCreate(PRODUCTOS);
       console.log('[Seed] Productos insertados ✓');
     }
 

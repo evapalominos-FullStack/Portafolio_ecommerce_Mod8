@@ -57,11 +57,9 @@ async function bootstrap() {
     await sequelize.sync({ force: false });
     console.log('[Sequelize] Tablas sincronizadas ✓');
 
-    // Seed solo si no hay productos
-  await Product.destroy({ where: {} });
-await Product.bulkCreate(PRODUCTOS);
-      console.log('[Seed] Productos insertados ✓');
-    }
+    await Product.destroy({ where: {} });
+    await Product.bulkCreate(PRODUCTOS);
+    console.log('[Seed] Productos insertados ✓');
 
     // Resetear secuencia
     await sequelize.query(

@@ -270,7 +270,7 @@ async function loadProducts() {
   <div class="col-sm-6 col-md-4 col-lg-3">
     <div class="card card-product h-100 shadow-sm">
       <img 
-        src="https://picsum.photos/seed/${p.id}/400/200" 
+        src="https://source.unsplash.com/400x200/?${encodeURIComponent(p.name)}" 
         class="card-img-top" 
         style="height:160px; object-fit:cover; opacity:0.85;"
         alt="${p.name}"

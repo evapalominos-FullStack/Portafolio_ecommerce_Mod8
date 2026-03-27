@@ -267,19 +267,25 @@ async function loadProducts() {
     const data  = await api('GET', '/api/products');
     const grid  = document.getElementById('products-grid');
     grid.innerHTML = data.data.map(p => `
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="card card-product h-100 shadow-sm">
-          <div class="card-body d-flex flex-column">
-            <h6 class="card-title">${p.name}</h6>
-            <p class="card-text text-muted small flex-grow-1">${p.description || ''}</p>
-            <p class="fw-bold text-primary fs-5">$${parseFloat(p.price).toFixed(2)}</p>
-            <button class="btn btn-primary btn-sm" onclick="agregarAlCarrito(${p.id})">
-              🛒 Agregar al carrito
-            </button>
-          </div>
-        </div>
+  <div class="col-sm-6 col-md-4 col-lg-3">
+    <div class="card card-product h-100 shadow-sm">
+      <img 
+        src="https://picsum.photos/seed/${p.id}/400/200" 
+        class="card-img-top" 
+        style="height:160px; object-fit:cover; opacity:0.85;"
+        alt="${p.name}"
+      />
+      <div class="card-body d-flex flex-column">
+        <h6 class="card-title">${p.name}</h6>
+        <p class="card-text small flex-grow-1" style="color:rgba(255,255,255,0.7)">${p.description || ''}</p>
+        <p class="fw-bold fs-5" style="color:#c8e6a0">$${parseFloat(p.price).toFixed(2)}</p>
+        <button class="btn btn-sm w-100" style="background:rgba(255,255,255,0.2); color:#fff; border:1px solid rgba(255,255,255,0.3);" onclick="agregarAlCarrito(${p.id})">
+          🛒 Agregar al carrito
+        </button>
       </div>
-    `).join('');
+    </div>
+  </div>
+`).join('');
   } catch (e) {
     toast('Error al cargar productos: ' + e.message, 'danger');
   }

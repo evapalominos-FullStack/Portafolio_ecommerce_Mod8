@@ -262,6 +262,17 @@ function logout() {
 }
 
 // ── PRODUCTOS ─────────────────────────────────────────────────────────────
+function imagenProducto(nombre) {
+  const imagenes = {
+    'MacBook Air M3':    'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=200&fit=crop',
+    'iPhone 16 Pro':     'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=400&h=200&fit=crop',
+    'AirPods Pro 3':     'https://images.unsplash.com/photo-1588423771073-b8903fead0ff?w=400&h=200&fit=crop',
+    'iPad Air M2':       'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=200&fit=crop',
+    'Apple Watch Ultra': 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&h=200&fit=crop',
+    'Mac mini M4':       'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=200&fit=crop',
+  };
+  return imagenes[nombre] || 'https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=400&h=200&fit=crop';
+}
 async function loadProducts() {
   try {
     const data  = await api('GET', '/api/products');
@@ -270,7 +281,7 @@ async function loadProducts() {
   <div class="col-sm-6 col-md-4 col-lg-3">
     <div class="card card-product h-100 shadow-sm">
       <img 
-        src="https://source.unsplash.com/400x200/?${encodeURIComponent(p.name)}" 
+        src="${imagenProducto(p.name)}" 
         class="card-img-top" 
         style="height:160px; object-fit:cover; opacity:0.85;"
         alt="${p.name}"

@@ -389,7 +389,7 @@
     }
     async function loadProducts() {
       try {
-        const res = await api('/api/products');
+        const res = await fetch('/api/products', { method: 'GET' });
         const data = await res.json();
         const grid = document.getElementById('products-grid');
         grid.innerHTML = data.data.map(p => `

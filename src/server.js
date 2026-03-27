@@ -57,8 +57,10 @@ async function bootstrap() {
     await sequelize.sync({ force: false });
     console.log('[Sequelize] Tablas sincronizadas ✓');
 
-    await Product.destroy({ where: {} });
-    await Product.bulkCreate(PRODUCTOS);
+    const count = await Product.count();
+if (count === 0) {
+  await Product.bulkCreate(PRODUCTOS);
+}
     console.log('[Seed] Productos insertados ✓');
 
     // Resetear secuencia

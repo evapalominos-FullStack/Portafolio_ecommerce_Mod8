@@ -352,6 +352,7 @@
         localStorage.setItem('user', JSON.stringify(data.user));
         renderNav();
         showView('products');
+        loadProducts();
         toast(`¡Bienvenido ${data.user.username}! 👋`);
       } catch (e) {
         showMsg('login-msg', e.message);

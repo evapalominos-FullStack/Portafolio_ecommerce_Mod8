@@ -58,9 +58,8 @@ async function bootstrap() {
     console.log('[Sequelize] Tablas sincronizadas ✓');
 
     // Seed solo si no hay productos
-    const count = await Product.count();
-    if (count === 0) {
-      await Product.bulkCreate(PRODUCTOS);
+  await Product.destroy({ where: {} });
+await Product.bulkCreate(PRODUCTOS);
       console.log('[Seed] Productos insertados ✓');
     }
 

@@ -41,14 +41,14 @@ app.use((req, res) => {
 
 // ── Seed de productos de ejemplo ───────────────────────────────────────────
 const PRODUCTOS = [
-  { name: 'MacBook Air M3', description: 'Laptop ultradelgada con chip M3', price: 1299.99 },
-  { name: 'iPhone 16 Pro', description: 'Smartphone flagship de Apple', price: 999.99 },
-  { name: 'AirPods Pro 3', description: 'Auriculares inalámbricos premium', price: 249.99 },
-  { name: 'iPad Air M2', description: 'Tablet potente y versátil', price: 599.99 },
-  { name: 'Apple Watch Ultra', description: 'Smartwatch de alta gama', price: 799.99 },
-  { name: 'Mac mini M4', description: 'Computador compacto y potente', price: 599.99 },
-  { name: 'Apple TV 4K', description: 'Streaming en resolución 4K HDR', price: 129.99 },
-  { name: 'HomePod mini', description: 'Altavoz inteligente con Siri', price: 99.99 },
+  { name: 'MacBook Air M3', description: 'Laptop ultradelgada con chip M3', price: 1299 },
+  { name: 'iPhone 16 Pro', description: 'Smartphone flagship de Apple', price: 999 },
+  { name: 'AirPods Pro 3', description: 'Auriculares inalámbricos premium', price: 249 },
+  { name: 'iPad Air M2', description: 'Tablet potente y versátil', price: 599 },
+  { name: 'Apple Watch Ultra', description: 'Smartwatch de alta gama', price: 799 },
+  { name: 'Mac mini M4', description: 'Computador compacto y potente', price: 599 },
+  { name: 'Apple TV 4K', description: 'Streaming en resolución 4K HDR', price: 129 },
+  { name: 'HomePod mini', description: 'Altavoz inteligente con Siri', price: 99 },
 ];
 
 // ── Inicialización ─────────────────────────────────────────────────────────

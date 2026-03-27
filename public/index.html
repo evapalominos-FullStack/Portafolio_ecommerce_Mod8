@@ -215,8 +215,8 @@
       <!-- FIN CARRUSEL -->
 
       <!-- GRID DE PRODUCTOS -->
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 style="color:#fff">🛍️ Productos</h2>
+      <div class="d-flex justify-content-between align-items-center mb-4" id="products-header">
+  <h2 style="color:#fff">🛍️ Productos</h2>
         <button class="btn btn-outline-light btn-sm" onclick="showView('cart')">
           🛒 Ver carrito <span class="badge bg-danger" id="cart-badge">0</span>
         </button>
@@ -414,7 +414,7 @@
         <p class="fw-bold fs-5" style="color:#c8e6a0">$${parseFloat(p.price).toFixed(2)}</p>
         <button class="btn btn-sm w-100" style="background:rgba(255,255,255,0.2); color:#fff; border:1px solid rgba(255,255,255,0.3);" onclick="${getToken() ? `agregarAlCarrito(${p.id})` : `showView('auth')`}">
   🛒 ${getToken() ? 'Agregar al carrito' : 'Inicia sesión para comprar'}
-        </button>
+</button>
           🛒 Agregar al carrito
         </button>
       </div>

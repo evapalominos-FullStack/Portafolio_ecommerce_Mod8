@@ -332,8 +332,12 @@
       <button class="btn btn-danger btn-sm" onclick="logout()">Salir</button>
     `;
       } else {
-        nav.innerHTML = '';
-      }
+    nav.innerHTML = `
+      <button class="btn btn-outline-light btn-sm" onclick="showView('products')">🛍️ Productos</button>
+      <button class="btn btn-outline-light btn-sm" onclick="showView('auth')">Iniciar sesión</button>
+      <button class="btn btn-success btn-sm" onclick="switchTab('register'); showView('auth')">Registrarse</button>
+    `;
+  }
     }
 
     // ── AUTH ──────────────────────────────────────────────────────────────────

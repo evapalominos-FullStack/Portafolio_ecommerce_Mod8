@@ -324,6 +324,7 @@
       const user = getUser();
       const nav = document.getElementById('nav-auth');
       if (user) {
+        document.getElementById('products-header').style.display = 'flex';
         nav.innerHTML = `
       <span class="text-white">Hola, <b>${user.username}</b></span>
       <button class="btn btn-outline-light btn-sm" onclick="showView('products')">🛍️ Productos</button>
@@ -332,6 +333,7 @@
       <button class="btn btn-danger btn-sm" onclick="logout()">Salir</button>
     `;
       } else {
+        document.getElementById('products-header').style.display = 'none';
     nav.innerHTML = `
       <button class="btn btn-outline-light btn-sm" onclick="showView('products')">🛍️ Productos</button>
       <button class="btn btn-outline-light btn-sm" onclick="showView('auth')">Iniciar sesión</button>

@@ -6,7 +6,7 @@ const { Product } = require('../models');
 
 // ── GET /api/products (protegida) ────────────────────────────────────────────
 // Lista todos los productos — requiere JWT
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const products = await Product.findAll({ order: [['id', 'ASC']] });
     res.status(200).json({ ok: true, data: products });
